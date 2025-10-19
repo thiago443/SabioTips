@@ -200,3 +200,16 @@ if __name__ == "__main__":
         worker_loop()
     except KeyboardInterrupt:
         print("Encerrando.")
+# --- Servidor Flask para manter o Render ativo ---
+from flask import Flask
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot Dicas Sabio está rodando corretamente!"
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port) 
