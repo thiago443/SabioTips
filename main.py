@@ -214,3 +214,20 @@ if __name__ == '__main__':
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    try:
+        # Mensagem inicial confirmando que o bot subiu
+        send_telegram("Bot iniciado! 🚀 Enviando análises de futebol...")
+
+        # Se você tiver uma função que retorna análises por liga
+        ligas = ["liga1", "liga2", "liga3"]  # substitua pelos nomes reais das ligas
+        for liga in ligas:
+            mensagem = monta_mensagem(liga)  # função que monta a análise de cada liga
+            send_telegram(mensagem)
+            print(f"Análise enviada para {liga}!")
+
+        send_telegram("✅ Todas as análises enviadas com sucesso!")
+
+    except Exception as e:
+        send_telegram(f"⚠️ Erro ao enviar análises: {e}")
+        print("Erro no bot:", e)
