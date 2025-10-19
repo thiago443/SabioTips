@@ -193,23 +193,24 @@ def worker_loop():
         print("Aguardando 5 minutos para próxima verificação...")
         time.sleep(300)
 
-if __name__ == "__main__":
-    print("SábioTipsBot (versão analítica) iniciando...")
-    # start background worker (when running on Render, use process management)
-    try:
-        worker_loop()
-    except KeyboardInterrupt:
-        print("Encerrando.")
-# --- Servidor Flask para manter o Render ativo ---
-from flask import Flask
-import os
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot Dicas Sabio está rodando corretamente!"
-
 if __name__ == '__main__':
+    print("SábioTipsBot (versão analítica) iniciando...")
+
+    # Inicia o worker em uma thread separada
+    from threading import Thread
+    worker = Thread(target=worker_loop)
+    worker.daemon = True
+    worker.start()
+
+    # Inicia o servidor Flask para o Render detectar a porta
+    from flask import Flask
+    import os
+
+    app = Flask(__name__)
+
+    @app.route('/')
+    def home():
+        return "Bot Dicas Sabio está rodando corretamente!"
+
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port)
